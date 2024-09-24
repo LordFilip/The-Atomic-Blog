@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
-import { PostContext, PostProvider } from "./PostContext";
+import { usePost, PostProvider } from "./PostContext";
 
 function createRandomPost() {
   return {
@@ -18,26 +18,25 @@ function App() {
     [isFakeDark]
   );
   return (
-    <PostProvider>
-      <section>
-        <button
-          onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
-          className="btn-fake-dark-mode"
-        >
-          {isFakeDark ? "☀️" : "🌙"}
-        </button>
-
+    <section>
+      <button
+        onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
+        className="btn-fake-dark-mode"
+      >
+        {isFakeDark ? "☀️" : "🌙"}
+      </button>
+      <PostProvider>
         <Header />
         <Main />
         <Archive />
         <Footer />
-      </section>
-    </PostProvider>
+      </PostProvider>
+    </section>
   );
 }
 
 function Header() {
-  const { onClearPosts } = useContext(PostContext);
+  const { onClearPosts } = usePost();
   return (
     <header>
       <h1>
@@ -53,7 +52,7 @@ function Header() {
 }
 
 function SearchPosts() {
-  const { searchQuery, setSearchQuery } = useContext(PostContext);
+  const { searchQuery, setSearchQuery } = usePost();
   return (
     <input
       value={searchQuery}
@@ -64,7 +63,7 @@ function SearchPosts() {
 }
 
 function Results() {
-  const { posts } = useContext(PostContext);
+  const { posts } = usePost();
   return <p>🚀 {posts.length} atomic posts found</p>;
 }
 
@@ -86,7 +85,7 @@ function Posts() {
 }
 
 function FormAddPost() {
-  const { onAddPost } = useContext(PostContext);
+  const { onAddPost } = usePost();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
 
@@ -116,7 +115,7 @@ function FormAddPost() {
 }
 
 function List() {
-  const { posts } = useContext(PostContext);
+  const { posts } = usePost();
   return (
     <ul>
       {posts.map((post, i) => (
@@ -130,7 +129,7 @@ function List() {
 }
 
 function Archive() {
-  const { onAddPost } = useContext(PostContext);
+  const { onAddPost } = usePost();
   const [posts] = useState(() =>
     Array.from({ length: 10000 }, () => createRandomPost())
   );
